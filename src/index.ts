@@ -65,8 +65,7 @@ async function submitDeploymentData(token: string) {
 
   const response = await submitDeploy(cloudId, token, body);
 
-  core.info(`BODY: ${body}`);
-  core.info(`RESPONSE: ${response}`);
+  core.info(`RESPONSE INDEX: ${response}`);
   core.endGroup();
 }
 

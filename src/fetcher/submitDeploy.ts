@@ -20,6 +20,8 @@ export const submitDeploy = async (
       },
     );
 
+    core.info(`RESPONSE : ${response}`);
+
     const result = await response.json();
 
     core.info(`RESULT : ${result}`);

@@ -217,6 +217,7 @@ const submitDeploy = (cloudId, token, body) => __awaiter(void 0, void 0, void 0,
             },
             body,
         });
+        core.info(`RESPONSE : ${response}`);
         const result = yield response.json();
         core.info(`RESULT : ${result}`);
         if (result.code === 202) {
@@ -321,8 +322,7 @@ function submitDeploymentData(token) {
         };
         const body = JSON.stringify([deployment]);
         const response = yield fetcher_1.submitDeploy(cloudId, token, body);
-        core.info(`BODY: ${body}`);
-        core.info(`RESPONSE: ${response}`);
+        core.info(`RESPONSE INDEX: ${response}`);
         core.endGroup();
     });
 }
