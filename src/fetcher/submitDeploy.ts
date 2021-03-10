@@ -22,6 +22,8 @@ export const submitDeploy = async (
 
     const result = await response.json();
 
+    core.info(`RESULT : ${result}`);
+
     if (result.code === 202) {
       core.info('🎉 Success submit deployment data');
       return result;
