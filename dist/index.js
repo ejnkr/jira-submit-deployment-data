@@ -284,6 +284,10 @@ function submitDeploymentData(token) {
         const cloudId = yield fetcher_1.getJiraCloudId(baseUrl);
         core.endGroup();
         core.startGroup('📡 Upload deployment data to Jira Cloud');
+        core.info(`env run id: ${process.env['GITHUB_RUN_ID']}`);
+        core.info(`env run number: ${process.env['GITHUB_RUN_NUMBER']}`);
+        core.info(`context run id: ${github.context.runId}`);
+        core.info(`context run number: ${github.context.runNumber}`);
         const deployment = {
             schemaVersion: '1.0',
             deploymentSequenceNumber: (_a = Number(core.getInput('deploymentSequenceNumber'))) !== null && _a !== void 0 ? _a : process.env['GITHUB_RUN_ID'],

@@ -16,6 +16,12 @@ async function submitDeploymentData(token: string) {
   core.endGroup();
 
   core.startGroup('📡 Upload deployment data to Jira Cloud');
+
+  core.info(`env run id: ${process.env['GITHUB_RUN_ID']}`);
+  core.info(`env run number: ${process.env['GITHUB_RUN_NUMBER']}`);
+  core.info(`context run id: ${github.context.runId}`);
+  core.info(`context run number: ${github.context.runNumber}`);
+
   const deployment: DeploymentData = {
     schemaVersion: '1.0',
     deploymentSequenceNumber:
