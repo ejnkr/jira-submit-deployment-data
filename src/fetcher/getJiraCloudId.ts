@@ -10,6 +10,7 @@ export const getJiraCloudId = async (baseUrl: string) => {
     const result = await response.json();
 
     if (result.cloudId) {
+      core.info('Success');
       return result.cloudId;
     } else {
       throw {

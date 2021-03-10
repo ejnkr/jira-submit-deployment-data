@@ -70,8 +70,8 @@ async function submitDeploymentData(token: string) {
 (async function () {
   try {
     core.startGroup('🤫 Get OAuth Credential');
-    const clientId = core.getInput('client-id');
-    const clientSecret = core.getInput('client-secret');
+    const clientId = core.getInput('clientId', { required: true });
+    const clientSecret = core.getInput('clientSecret', { required: true });
     const token = await getAccessToken(clientId, clientSecret);
     core.endGroup();
     await submitDeploymentData(token);
