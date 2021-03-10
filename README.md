@@ -68,7 +68,7 @@ Inside your .yml file there should be something that looks like this required va
       uses: ejnkr/jira-usbmit-deployment-data@main
       with:
         clientId: ${{ secrets.JIRA_CLIENT_ID }}
-        clientSecret: '${{ secrets.JIRA_CLIENT_SECRET }}
+        clientSecret: ${{ secrets.JIRA_CLIENT_SECRET }}
         baseUrl: ${{ secrets.JIRA_BASE_URL }}
         jiraKeys: ${{ steps.getJiraKeys.outputs.jiraKeys }}
         displayName: Deployment Number 1
