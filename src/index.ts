@@ -61,7 +61,9 @@ async function submitDeploymentData(token: string) {
     },
   };
 
-  const body = JSON.stringify([deployment]);
+  const body = JSON.stringify({
+    deployments: [deployment],
+  });
 
   const response = await submitDeploy(cloudId, token, body);
 

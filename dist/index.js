@@ -220,12 +220,12 @@ const submitDeploy = (cloudId, token, body) => __awaiter(void 0, void 0, void 0,
         core.info(`RESPONSE : ${JSON.stringify(response)}`);
         const result = yield response.json();
         core.info(`RESULT : ${JSON.stringify(result)}`);
-        if (result.code === 202) {
+        if (result[0].code === 202) {
             core.info('🎉 Success submit deployment data');
-            return result;
+            return result[0];
         }
         else {
-            throw result;
+            throw result[0];
         }
     }
     catch (e) {
@@ -320,7 +320,9 @@ function submitDeploymentData(token) {
                 type: core.getInput('environmentType') || '',
             },
         };
-        const body = JSON.stringify([deployment]);
+        const body = JSON.stringify({
+            deployments: [deployment],
+        });
         const response = yield fetcher_1.submitDeploy(cloudId, token, body);
         core.info(`RESPONSE INDEX: ${response}`);
         core.endGroup();
