@@ -60,6 +60,7 @@ const getAccessToken = (clientId, clientSecret) => __awaiter(void 0, void 0, voi
         });
         const result = yield response.json();
         if (!result.error) {
+            core.info('Success');
             return result.access_token;
         }
         else {
@@ -124,6 +125,7 @@ const getJiraCloudId = (baseUrl) => __awaiter(void 0, void 0, void 0, function* 
         const response = yield node_fetch_1.default(url.href);
         const result = yield response.json();
         if (result.cloudId) {
+            core.info('Success');
             return result.cloudId;
         }
         else {
@@ -323,8 +325,8 @@ function submitDeploymentData(token) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             core.startGroup('🤫 Get OAuth Credential');
-            const clientId = core.getInput('client-id');
-            const clientSecret = core.getInput('client-secret');
+            const clientId = core.getInput('clientId', { required: true });
+            const clientSecret = core.getInput('clientSecret', { required: true });
             const token = yield fetcher_1.getAccessToken(clientId, clientSecret);
             core.endGroup();
             yield submitDeploymentData(token);
