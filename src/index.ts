@@ -39,7 +39,7 @@ async function submitDeploymentData(token: string) {
     url:
       core.getInput('url') ||
       `${github.context.payload.repository?.html_url}/actions/runs/${process.env['GITHUB_RUN_ID']}`,
-    description: core.getInput('description') ?? '',
+    description: core.getInput('description') || '',
     lastUpdated: core.getInput('lastUpdated')
       ? dateFormat(core.getInput('lastUpdated'), "yyyy-mm-dd'T'HH:MM:ss'Z'")
       : '',
@@ -47,13 +47,13 @@ async function submitDeploymentData(token: string) {
     state: (core.getInput('state') as StateType) ?? '',
     pipeline: {
       id:
-        core.getInput('pipelineId') ??
+        core.getInput('pipelineId') ||
         `${github.context.payload.repository?.full_name} ${github.context.workflow}`,
       displayName:
-        core.getInput('pipelineDisplayName') ??
+        core.getInput('pipelineDisplayName') ||
         `Workflow: ${github.context.workflow} (#${process.env['GITHUB_RUN_NUMBER']})`,
       url:
-        core.getInput('pipelineUrl') ??
+        core.getInput('pipelineUrl') ||
         `${github.context.payload.repository?.url}/actions/runs/${process.env['GITHUB_RUN_ID']}`,
     },
     environment: {
@@ -69,6 +69,7 @@ async function submitDeploymentData(token: string) {
 
   const response = await submitDeploy(cloudId, token, body);
 
+  core.info(`BODY: ${body}`);
   core.info(`RESPONSE INDEX: ${response}`);
   core.endGroup();
 }

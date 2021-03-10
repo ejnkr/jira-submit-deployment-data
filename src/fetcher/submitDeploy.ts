@@ -26,11 +26,11 @@ export const submitDeploy = async (
 
     core.info(`RESULT : ${JSON.stringify(result)}`);
 
-    if (result[0].rejectedDeployments.length === 0) {
+    if (result.rejectedDeployments.length === 0) {
       core.info('🎉 Success submit deployment data');
-      return result[0];
+      return result;
     } else {
-      throw result[0];
+      throw result;
     }
   } catch (e) {
     core.setFailed(e.message);
