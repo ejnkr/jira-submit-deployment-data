@@ -220,7 +220,7 @@ const submitDeploy = (cloudId, token, body) => __awaiter(void 0, void 0, void 0,
         core.info(`RESPONSE : ${JSON.stringify(response)}`);
         const result = yield response.json();
         core.info(`RESULT : ${JSON.stringify(result)}`);
-        if (result[0].code === 202) {
+        if (result[0].rejectedDeployments.length === 0) {
             core.info('🎉 Success submit deployment data');
             return result[0];
         }
@@ -294,12 +294,14 @@ function submitDeploymentData(token) {
             updateSequenceNumber: Number(core.getInput('updateSequenceNumber')) ||
                 Number(process.env['GITHUB_RUN_NUMBER']) ||
                 0,
-            associations: {
-                associationType: 'issueKeys',
-                values: core.getInput('jiraKeys')
-                    ? core.getInput('jiraKeys').split(',')
-                    : [],
-            },
+            associations: [
+                {
+                    associationType: 'issueKeys',
+                    values: core.getInput('jiraKeys')
+                        ? core.getInput('jiraKeys').split(',')
+                        : [],
+                },
+            ],
             displayName: core.getInput('displayName') || '',
             url: core.getInput('url') ||
                 `${(_a = github.context.payload.repository) === null || _a === void 0 ? void 0 : _a.html_url}/actions/runs/${process.env['GITHUB_RUN_ID']}`,

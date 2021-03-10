@@ -27,12 +27,14 @@ async function submitDeploymentData(token: string) {
       Number(core.getInput('updateSequenceNumber')) ||
       Number(process.env['GITHUB_RUN_NUMBER']) ||
       0,
-    associations: {
-      associationType: 'issueKeys',
-      values: core.getInput('jiraKeys')
-        ? core.getInput('jiraKeys').split(',')
-        : [],
-    },
+    associations: [
+      {
+        associationType: 'issueKeys',
+        values: core.getInput('jiraKeys')
+          ? core.getInput('jiraKeys').split(',')
+          : [],
+      },
+    ],
     displayName: core.getInput('displayName') || '',
     url:
       core.getInput('url') ||

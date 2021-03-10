@@ -34,7 +34,7 @@ export interface DeploymentData {
   schemaVersion?: string;
   deploymentSequenceNumber: number;
   updateSequenceNumber: number;
-  associations: Associations;
+  associations: Associations[];
   displayName: string;
   url: string;
   description: string;
