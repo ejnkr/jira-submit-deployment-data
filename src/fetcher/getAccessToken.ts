@@ -25,6 +25,7 @@ export const getAccessToken = async (
     const result = await response.json();
 
     if (!result.error) {
+      core.info('Success');
       return result.access_token;
     } else {
       throw {
