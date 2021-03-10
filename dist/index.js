@@ -217,9 +217,9 @@ const submitDeploy = (cloudId, token, body) => __awaiter(void 0, void 0, void 0,
             },
             body,
         });
-        core.info(`RESPONSE : ${response}`);
+        core.info(`RESPONSE : ${JSON.stringify(response)}`);
         const result = yield response.json();
-        core.info(`RESULT : ${result}`);
+        core.info(`RESULT : ${JSON.stringify(result)}`);
         if (result.code === 202) {
             core.info('🎉 Success submit deployment data');
             return result;
