@@ -20,9 +20,13 @@ export const submitDeploy = async (
       },
     );
 
+    core.info(`RESPONSE : ${JSON.stringify(response)}`);
+
     const result = await response.json();
 
-    if (result.code === 202) {
+    core.info(`RESULT : ${JSON.stringify(result)}`);
+
+    if (result.rejectedDeployments.length === 0) {
       core.info('🎉 Success submit deployment data');
       return result;
     } else {

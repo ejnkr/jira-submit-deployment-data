@@ -217,8 +217,10 @@ const submitDeploy = (cloudId, token, body) => __awaiter(void 0, void 0, void 0,
             },
             body,
         });
+        core.info(`RESPONSE : ${JSON.stringify(response)}`);
         const result = yield response.json();
-        if (result.code === 202) {
+        core.info(`RESULT : ${JSON.stringify(result)}`);
+        if (result.rejectedDeployments.length === 0) {
             core.info('🎉 Success submit deployment data');
             return result;
         }
@@ -277,7 +279,7 @@ const github = __importStar(__nccwpck_require__(438));
 const dateformat_1 = __importDefault(__nccwpck_require__(512));
 const fetcher_1 = __nccwpck_require__(1);
 function submitDeploymentData(token) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+    var _a, _b, _c, _d, _e;
     return __awaiter(this, void 0, void 0, function* () {
         core.startGroup('🚀 Get Jira Cloud ID');
         const baseUrl = core.getInput('baseUrl');
@@ -286,27 +288,36 @@ function submitDeploymentData(token) {
         core.startGroup('📡 Upload deployment data to Jira Cloud');
         const deployment = {
             schemaVersion: '1.0',
-            deploymentSequenceNumber: (_a = Number(core.getInput('deploymentSequenceNumber'))) !== null && _a !== void 0 ? _a : process.env['GITHUB_RUN_ID'],
-            updateSequenceNumber: (_b = Number(core.getInput('updateSequenceNumber'))) !== null && _b !== void 0 ? _b : process.env['GITHUB_RUN_NUMBER'],
-            associations: {
-                associationType: 'issueKeys',
-                values: core.getInput('jiraKeys')
-                    ? core.getInput('jiraKeys').split(',')
-                    : [],
-            },
+            deploymentSequenceNumber: Number(core.getInput('deploymentSequenceNumber')) ||
+                Number(process.env['GITHUB_RUN_ID']) ||
+                0,
+            updateSequenceNumber: Number(core.getInput('updateSequenceNumber')) ||
+                Number(process.env['GITHUB_RUN_NUMBER']) ||
+                0,
+            associations: [
+                {
+                    associationType: 'issueKeys',
+                    values: core.getInput('jiraKeys')
+                        ? core.getInput('jiraKeys').split(',')
+                        : [],
+                },
+            ],
             displayName: core.getInput('displayName') || '',
             url: core.getInput('url') ||
-                `${(_c = github.context.payload.repository) === null || _c === void 0 ? void 0 : _c.html_url}/actions/runs/${process.env['GITHUB_RUN_ID']}`,
-            description: (_d = core.getInput('description')) !== null && _d !== void 0 ? _d : '',
+                `${(_a = github.context.payload.repository) === null || _a === void 0 ? void 0 : _a.html_url}/actions/runs/${process.env['GITHUB_RUN_ID']}`,
+            description: core.getInput('description') || '',
             lastUpdated: core.getInput('lastUpdated')
                 ? dateformat_1.default(core.getInput('lastUpdated'), "yyyy-mm-dd'T'HH:MM:ss'Z'")
                 : '',
-            label: (_e = core.getInput('label')) !== null && _e !== void 0 ? _e : '',
-            state: (_f = core.getInput('state')) !== null && _f !== void 0 ? _f : '',
+            label: (_b = core.getInput('label')) !== null && _b !== void 0 ? _b : '',
+            state: (_c = core.getInput('state')) !== null && _c !== void 0 ? _c : '',
             pipeline: {
-                id: (_g = core.getInput('pipelineId')) !== null && _g !== void 0 ? _g : `${(_h = github.context.payload.repository) === null || _h === void 0 ? void 0 : _h.full_name} ${github.context.workflow}`,
-                displayName: (_j = core.getInput('pipelineDisplayName')) !== null && _j !== void 0 ? _j : `Workflow: ${github.context.workflow} (#${process.env['GITHUB_RUN_NUMBER']})`,
-                url: (_k = core.getInput('pipelineUrl')) !== null && _k !== void 0 ? _k : `${(_l = github.context.payload.repository) === null || _l === void 0 ? void 0 : _l.url}/actions/runs/${process.env['GITHUB_RUN_ID']}`,
+                id: core.getInput('pipelineId') ||
+                    `${(_d = github.context.payload.repository) === null || _d === void 0 ? void 0 : _d.full_name} ${github.context.workflow}`,
+                displayName: core.getInput('pipelineDisplayName') ||
+                    `Workflow: ${github.context.workflow} (#${process.env['GITHUB_RUN_NUMBER']})`,
+                url: core.getInput('pipelineUrl') ||
+                    `${(_e = github.context.payload.repository) === null || _e === void 0 ? void 0 : _e.url}/actions/runs/${process.env['GITHUB_RUN_ID']}`,
             },
             environment: {
                 id: core.getInput('environmentId') || '',
@@ -314,10 +325,12 @@ function submitDeploymentData(token) {
                 type: core.getInput('environmentType') || '',
             },
         };
-        const body = JSON.stringify([deployment]);
+        const body = JSON.stringify({
+            deployments: [deployment],
+        });
         const response = yield fetcher_1.submitDeploy(cloudId, token, body);
         core.info(`BODY: ${body}`);
-        core.info(`RESPONSE: ${response}`);
+        core.info(`RESPONSE INDEX: ${response}`);
         core.endGroup();
     });
 }

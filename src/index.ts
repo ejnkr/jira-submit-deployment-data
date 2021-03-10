@@ -16,25 +16,30 @@ async function submitDeploymentData(token: string) {
   core.endGroup();
 
   core.startGroup('📡 Upload deployment data to Jira Cloud');
+
   const deployment: DeploymentData = {
     schemaVersion: '1.0',
     deploymentSequenceNumber:
-      Number(core.getInput('deploymentSequenceNumber')) ??
-      process.env['GITHUB_RUN_ID'],
+      Number(core.getInput('deploymentSequenceNumber')) ||
+      Number(process.env['GITHUB_RUN_ID']) ||
+      0,
     updateSequenceNumber:
-      Number(core.getInput('updateSequenceNumber')) ??
-      process.env['GITHUB_RUN_NUMBER'],
-    associations: {
-      associationType: 'issueKeys',
-      values: core.getInput('jiraKeys')
-        ? core.getInput('jiraKeys').split(',')
-        : [],
-    },
+      Number(core.getInput('updateSequenceNumber')) ||
+      Number(process.env['GITHUB_RUN_NUMBER']) ||
+      0,
+    associations: [
+      {
+        associationType: 'issueKeys',
+        values: core.getInput('jiraKeys')
+          ? core.getInput('jiraKeys').split(',')
+          : [],
+      },
+    ],
     displayName: core.getInput('displayName') || '',
     url:
       core.getInput('url') ||
       `${github.context.payload.repository?.html_url}/actions/runs/${process.env['GITHUB_RUN_ID']}`,
-    description: core.getInput('description') ?? '',
+    description: core.getInput('description') || '',
     lastUpdated: core.getInput('lastUpdated')
       ? dateFormat(core.getInput('lastUpdated'), "yyyy-mm-dd'T'HH:MM:ss'Z'")
       : '',
@@ -42,13 +47,13 @@ async function submitDeploymentData(token: string) {
     state: (core.getInput('state') as StateType) ?? '',
     pipeline: {
       id:
-        core.getInput('pipelineId') ??
+        core.getInput('pipelineId') ||
         `${github.context.payload.repository?.full_name} ${github.context.workflow}`,
       displayName:
-        core.getInput('pipelineDisplayName') ??
+        core.getInput('pipelineDisplayName') ||
         `Workflow: ${github.context.workflow} (#${process.env['GITHUB_RUN_NUMBER']})`,
       url:
-        core.getInput('pipelineUrl') ??
+        core.getInput('pipelineUrl') ||
         `${github.context.payload.repository?.url}/actions/runs/${process.env['GITHUB_RUN_ID']}`,
     },
     environment: {
@@ -58,12 +63,14 @@ async function submitDeploymentData(token: string) {
     },
   };
 
-  const body = JSON.stringify([deployment]);
+  const body = JSON.stringify({
+    deployments: [deployment],
+  });
 
   const response = await submitDeploy(cloudId, token, body);
 
   core.info(`BODY: ${body}`);
-  core.info(`RESPONSE: ${response}`);
+  core.info(`RESPONSE INDEX: ${response}`);
   core.endGroup();
 }
 
