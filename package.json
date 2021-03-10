@@ -1,0 +1,35 @@
+{
+  "name": "jira-submit-deployment-data",
+  "version": "1.0.0",
+  "description": "Upload deployment data to Jira Cloud",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prebuild": "tsc",
+    "build": "ncc build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ejnkr/jira-submit-deployment-data.git"
+  },
+  "author": "spex",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ejnkr/jira-submit-deployment-data/issues"
+  },
+  "homepage": "https://github.com/ejnkr/jira-submit-deployment-data#readme",
+  "devDependencies": {
+    "@types/dateformat": "^3.0.1",
+    "@types/node": "^14.14.32",
+    "@types/node-fetch": "^2.5.8",
+    "@vercel/ncc": "^0.27.0",
+    "prettier": "^2.2.1",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0",
+    "dateformat": "^4.5.1",
+    "node-fetch": "^2.6.1"
+  }
+}

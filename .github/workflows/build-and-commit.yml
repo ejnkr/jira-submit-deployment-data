@@ -1,0 +1,26 @@
+name: Build and Commit
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: 15.x
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Commit and Push
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          file_pattern: dist/index.js lib/*.js
+          commit_message: Apply build file
