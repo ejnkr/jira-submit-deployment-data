@@ -16,14 +16,17 @@ async function submitDeploymentData(token: string) {
   core.endGroup();
 
   core.startGroup('📡 Upload deployment data to Jira Cloud');
+
   const deployment: DeploymentData = {
     schemaVersion: '1.0',
     deploymentSequenceNumber:
-      Number(core.getInput('deploymentSequenceNumber')) ??
-      process.env['GITHUB_RUN_ID'],
+      Number(core.getInput('deploymentSequenceNumber')) ||
+      Number(process.env['GITHUB_RUN_ID']) ||
+      0,
     updateSequenceNumber:
-      Number(core.getInput('updateSequenceNumber')) ??
-      process.env['GITHUB_RUN_NUMBER'],
+      Number(core.getInput('updateSequenceNumber')) ||
+      Number(process.env['GITHUB_RUN_NUMBER']) ||
+      0,
     associations: {
       associationType: 'issueKeys',
       values: core.getInput('jiraKeys')
