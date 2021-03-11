@@ -297,7 +297,7 @@ function submitDeploymentData(token) {
             associations: [
                 {
                     associationType: 'issueKeys',
-                    values: core.getInput('jiraKeys')
+                    values: core.getInput('jiraKeys', { required: true })
                         ? core.getInput('jiraKeys').split(',')
                         : [],
                 },
@@ -337,12 +337,18 @@ function submitDeploymentData(token) {
 (function () {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            core.startGroup('🤫 Get OAuth Credential');
-            const clientId = core.getInput('clientId', { required: true });
-            const clientSecret = core.getInput('clientSecret', { required: true });
-            const token = yield fetcher_1.getAccessToken(clientId, clientSecret);
-            core.endGroup();
-            yield submitDeploymentData(token);
+            const jiraKeys = core.getInput('jiraKeys', { required: true });
+            if (jiraKeys) {
+                core.startGroup('🤫 Get OAuth Credential');
+                const clientId = core.getInput('clientId', { required: true });
+                const clientSecret = core.getInput('clientSecret', { required: true });
+                const token = yield fetcher_1.getAccessToken(clientId, clientSecret);
+                core.endGroup();
+                yield submitDeploymentData(token);
+            }
+            else {
+                core.setFailed('🤔 You need jiraKeys to upload Deployment Data.');
+            }
         }
         catch (error) {
             core.setFailed(error.message);
