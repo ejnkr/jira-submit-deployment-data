@@ -30,7 +30,7 @@ async function submitDeploymentData(token: string) {
     associations: [
       {
         associationType: 'issueKeys',
-        values: core.getInput('jiraKeys')
+        values: core.getInput('jiraKeys', { required: true })
           ? core.getInput('jiraKeys').split(',')
           : [],
       },
@@ -76,12 +76,17 @@ async function submitDeploymentData(token: string) {
 
 (async function () {
   try {
-    core.startGroup('🤫 Get OAuth Credential');
-    const clientId = core.getInput('clientId', { required: true });
-    const clientSecret = core.getInput('clientSecret', { required: true });
-    const token = await getAccessToken(clientId, clientSecret);
-    core.endGroup();
-    await submitDeploymentData(token);
+    const jiraKeys = core.getInput('jiraKeys', { required: true });
+    if (jiraKeys) {
+      core.startGroup('🤫 Get OAuth Credential');
+      const clientId = core.getInput('clientId', { required: true });
+      const clientSecret = core.getInput('clientSecret', { required: true });
+      const token = await getAccessToken(clientId, clientSecret);
+      core.endGroup();
+      await submitDeploymentData(token);
+    } else {
+      core.setFailed('🤔 You need jiraKeys to upload Deployment Data.');
+    }
   } catch (error) {
     core.setFailed(error.message);
   }
