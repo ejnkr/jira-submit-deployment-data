@@ -76,7 +76,7 @@ async function submitDeploymentData(token: string) {
 
 (async function () {
   try {
-    const jiraKeys = core.getInput('jiraKeys', { required: true });
+    const jiraKeys = core.getInput('jiraKeys');
     if (jiraKeys) {
       core.startGroup('🤫 Get OAuth Credential');
       const clientId = core.getInput('clientId', { required: true });
@@ -85,7 +85,7 @@ async function submitDeploymentData(token: string) {
       core.endGroup();
       await submitDeploymentData(token);
     } else {
-      core.setFailed('🤔 You need jiraKeys to upload Deployment Data.');
+      core.warning('🤔 You need jiraKeys to upload Deployment Data.');
     }
   } catch (error) {
     core.setFailed(error.message);

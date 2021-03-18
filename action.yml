@@ -22,7 +22,7 @@ inputs:
     required: false
   jiraKeys:
     description: 'Jira issue keys to update Deployment Data'
-    required: true
+    required: false
   displayName:
     description: 'The human-readable name for the deployment. Will be shown in the UI.'
     required: true
