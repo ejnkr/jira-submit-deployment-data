@@ -337,7 +337,7 @@ function submitDeploymentData(token) {
 (function () {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const jiraKeys = core.getInput('jiraKeys', { required: true });
+            const jiraKeys = core.getInput('jiraKeys');
             if (jiraKeys) {
                 core.startGroup('🤫 Get OAuth Credential');
                 const clientId = core.getInput('clientId', { required: true });
@@ -347,7 +347,7 @@ function submitDeploymentData(token) {
                 yield submitDeploymentData(token);
             }
             else {
-                core.setFailed('🤔 You need jiraKeys to upload Deployment Data.');
+                core.warning('🤔 You need jiraKeys to upload Deployment Data.');
             }
         }
         catch (error) {
